@@ -6,7 +6,7 @@ const dotEnv=require("dotenv")
 
 dotEnv.config()
 
-const secretKey=process.env.SECRET_KEY
+
 
 
 // User Regsiteration 
@@ -51,7 +51,7 @@ const userLogin=async(request,response)=>{
            isPasswordMatch=await bcrypt.compare(password,userDetails.password);
            if (isPasswordMatch===true){
                const payload={userId:userDetails._id}
-               const jwtToken=await jwt.sign(payload,secretKey)
+               const jwtToken=await jwt.sign(payload,process.env.SECRET_KEY)
                response.send({message:"Login Successfully",jwt_token:jwtToken,status:200})
            }else{
                response.send({err_msg:"Invalid Password",status:500})

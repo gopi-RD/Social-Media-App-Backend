@@ -4,7 +4,6 @@ const dotEnv=require("dotenv")
 
 dotEnv.config()
 
-const secretKey=process.env.SECRET_KEY
 
 const verifyToken=async (request,response,next)=>{
     const authHeader=request.headers["authorization"]
@@ -16,7 +15,7 @@ const verifyToken=async (request,response,next)=>{
     }if (jwtToken===undefined){
         response.status(401).json({erro_msg:"Invalid Access Token"})
     }else{
-        await jwt.verify(jwtToken,secretKey,async(error,payload)=>{
+        await jwt.verify(jwtToken,process.env.SECRET_KEY,async(error,payload)=>{
             if (error){
                 response.status(401).json({erro_msg:"Invalid Access Token"})
             }else{
