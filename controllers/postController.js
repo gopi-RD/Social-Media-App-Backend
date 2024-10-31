@@ -21,7 +21,7 @@ const addPost = async (req, res) => {
 // Get all posts 
 const getAllPosts = async (req, res) => {
     try{
-        const posts=await postModel.find().populate("comments")
+        const posts=await postModel.find().populate("comments").populate("userId")
         res.status(200).json({posts})
     }
     catch(err){
@@ -35,7 +35,7 @@ const getAllPosts = async (req, res) => {
     const getPost = async (req, res) => {
     try{
         const{postId}=req.params
-        const post=await postModel.findById(postId).populate("comments")
+        const post=await postModel.findById(postId).populate("comments").populate("userId")
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
