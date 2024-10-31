@@ -4,7 +4,7 @@ const dotEnv=require("dotenv")
 
 dotEnv.config()
 
-const secretKey=process.env.secret_key
+const secretKey=process.env.SECRET_KEY
 
 const verifyToken=async (request,response,next)=>{
     const authHeader=request.headers["authorization"]
