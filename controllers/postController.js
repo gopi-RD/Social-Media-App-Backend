@@ -9,7 +9,8 @@ const addPost = async (req, res) => {
         const newPost=new postModel({content,imageUrl,likes})
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
-        await userdata.save()
+        await userdata.save() 
+
         res.status(201).json({message:"Add Post Successfully"})
     }
     catch(err){
@@ -20,7 +21,7 @@ const addPost = async (req, res) => {
 // Get all posts 
 const getAllPosts = async (req, res) => {
     try{
-        const posts=await postModel.find().populate("comments").populate("user")
+        const posts=await postModel.find().populate("comments")
         res.status(200).json({posts})
     }
     catch(err){
@@ -34,7 +35,7 @@ const getAllPosts = async (req, res) => {
     const getPost = async (req, res) => {
     try{
         const{postId}=req.params
-        const post=await postModel.findById(postId).populate("comments").populate("user")
+        const post=await postModel.findById(postId).populate("comments")
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
