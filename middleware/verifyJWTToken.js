@@ -19,7 +19,7 @@ const verifyToken=async (request,response,next)=>{
             if (error){
                 response.status(401).json({erro_msg:"Invalid Access Token"})
             }else{
-                request.user_id=payload.user_id
+                request.user_id=payload.userId
                 next();
             }
         })

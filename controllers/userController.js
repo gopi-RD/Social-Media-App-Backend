@@ -50,7 +50,7 @@ const userLogin=async(request,response)=>{
        }else{
            isPasswordMatch=await bcrypt.compare(password,userDetails.password);
            if (isPasswordMatch===true){
-               const payload={userId:userDetails._id}
+               const payload={userId:userDetails._id} 
                const jwtToken=await jwt.sign(payload,process.env.SECRET_KEY)
                response.send({message:"Login Successfully",jwt_token:jwtToken,status:200})
            }else{
@@ -69,6 +69,7 @@ const userLogin=async(request,response)=>{
 // get all users
 
     const getAllUsers=async(request,response)=>{
+        console.log(request.user_id)
         try{
             const users=await userModel.find().populate("posts")
             response.send({users:users,status:200})
@@ -79,6 +80,7 @@ const userLogin=async(request,response)=>{
 
 const getUser=async(request,response)=>{
     const {userId}=request.params 
+    console.log(userId)
     try {
         const user=await userModel.findById(userId).populate("posts")
         if (!user){

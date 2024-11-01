@@ -3,10 +3,18 @@ const userModel=require("../models/userModel")
 
 // Create a new post 
 
-const addPost = async (req, res) => {
+const addPost = async (request, res) => {
+    const {user_id}=request
+    console.log(user_id)
     try{
-        const {content,imageUrl,likes}=req.body
-        const newPost=new postModel({content,imageUrl,likes})
+        const userdata=await userModel.findById(user_id)
+        const {content,imageUrl,likes}=request.body
+        const newPost=new postModel({
+            content:content,
+            imageUrl:imageUrl,
+            userId:user_id,
+            likes:likes
+        })
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
         await userdata.save() 
@@ -21,7 +29,14 @@ const addPost = async (req, res) => {
 // Get all posts 
 const getAllPosts = async (req, res) => {
     try{
-        const posts=await postModel.find().populate("comments").populate("userId")
+        const posts=await postModel.find().populate('userId', 'username email')
+        .populate({
+            path: 'comments',          // Populate commentId array
+            populate: {
+              path: 'userId',         // Populate the postedBy field within each comment
+              select: 'username'        // Select only the username field for the commenter
+            }
+          })
         res.status(200).json({posts})
     }
     catch(err){
@@ -35,7 +50,14 @@ const getAllPosts = async (req, res) => {
     const getPost = async (req, res) => {
     try{
         const{postId}=req.params
-        const post=await postModel.findById(postId).populate("comments").populate("userId")
+        const post=await postModel.findById(postId).populate('userId', 'username email')
+        .populate({
+            path: 'comments',          // Populate commentId array
+            populate: {
+              path: 'userId',         // Populate the postedBy field within each comment
+              select: 'username'        // Select only the username field for the commenter
+            }
+          })
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
