@@ -74,9 +74,10 @@ const getAllPosts = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try{
+        const {user_id}=request
         const{postId}=req.params
         const {content,imageUrl,likes}=req.body
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,likes},{new:true})
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
@@ -85,6 +86,28 @@ const updatePost = async (req, res) => {
     catch(err){
         res.status(500).json({err_msg:err.message})
     }
+}
+
+// Update Likes into the database
+
+const updateLikes=async(req,res)=>{
+    const{postId}=req.params 
+    const {user_id}=request
+    const {likes}=req.body
+    try{
+        const postData=await postModel.findById(postId) 
+        const {content,imageUrl}=postData
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
+        if(!post){
+            return res.status(404).json({err_msg:"Post Not Found"})
+        }
+        res.status(200).json({message:"Post of Likes Updated Successfully"})
+        
+    }
+    catch(err){
+        res.status(500).json({err_msg:err.message})
+    }
+
 }
 
 
@@ -111,4 +134,4 @@ const deletePost = async (req, res) => {
 
 
 
-module.exports={addPost,getAllPosts,getPost,updatePost,deletePost}
+module.exports={addPost,getAllPosts,getPost,updatePost,updateLikes,deletePost}

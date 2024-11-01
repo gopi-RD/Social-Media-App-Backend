@@ -19,6 +19,7 @@ routes.post("/posts",middleware,postController.addPost);
 routes.get("/posts",middleware,postController.getAllPosts);
 routes.get("/posts/:postId",middleware,postController.getPost);
 routes.put("/posts/:postId",middleware,postController.updatePost);
+routes.put("/posts/likes/:postId",middleware,postController.updateLikes);
 routes.delete("/posts/:postId",middleware,postController.deletePost);
 
 // comment Routes 
