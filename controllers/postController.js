@@ -13,7 +13,7 @@ const addPost = async (request, res) => {
             content:content,
             imageUrl:imageUrl,
             userId:user_id,
-            likes:likes || 0
+            likes:likes 
         })
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
