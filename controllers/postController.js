@@ -76,15 +76,15 @@ const updatePost = async (req, res) => {
     try{
         const {user_id}=request
         const{postId}=req.params
-        const {content,imageUrl,likes}=req.body
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
+        const {content,imageUrl,likeBy}=req.body
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likeBy},{new:true})
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
         res.status(200).json({message:"Post Updated Successfully"})
     }
     catch(err){
-        res.status(500).json({err_msg:err.message})
+        res.status(500).json({err_msg:err.message}) 
     }
 }
 
@@ -93,11 +93,11 @@ const updatePost = async (req, res) => {
 const updateLikes=async(req,res)=>{
     const{postId}=req.params 
     const {user_id}=request
-    const {likes}=req.body
+    const {likeBy}=req.body
     try{
         const postData=await postModel.findById(postId) 
         const {content,imageUrl}=postData
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likeBy},{new:true})
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
