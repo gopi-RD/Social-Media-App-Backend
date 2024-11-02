@@ -99,9 +99,11 @@ const updateLikes=async(req,res)=>{
         if (hasLiked) {
           // If already liked, remove the like
           postData.likedBy = postData.likedBy.filter(id => id.toString() !== likes.toString());
+          postData.isLiked=false;
         } else {
           // If not liked, add the like
           postData.likedBy.push(likes);
+          postData.isLiked=true;
 
         }
         await postData.save();

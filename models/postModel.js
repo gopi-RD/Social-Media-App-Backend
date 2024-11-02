@@ -15,6 +15,10 @@ const postSchema=new mongoose.Schema({
     },
     likedBy:[ 
     ],
+    isLiked:{
+        type:Boolean,
+        default:false
+    },
     comments:[
         {
             type:mongoose.Schema.Types.ObjectId,
