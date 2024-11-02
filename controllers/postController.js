@@ -90,7 +90,6 @@ const updatePost = async (req, res) => {
 
 const updateLikes=async(req,res)=>{
     const{postId}=req.params 
-    const {user_id}=request
     const {likes}=req.body
     try{
         const postData=await postModel.findById(postId) 
