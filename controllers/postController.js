@@ -108,7 +108,7 @@ const updateLikes=async(request,res)=>{
         post.likesCount -= 1; // Decrement likesCount
         } else {
         // If not liked, add the like
-        post.likes.push(userId);
+        post.likes.push(user_id);
         post.likesCount += 1; // Increment likesCount
         }
         await post.save();
