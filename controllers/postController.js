@@ -6,6 +6,7 @@ const userModel=require("../models/userModel")
 const addPost = async (request, res) => {
     const {user_id}=request
     try{
+        const userdata=await userModel.findById(user_id)
         const {content,imageUrl}=request.body
         const newPost=new postModel({
             content:content,
@@ -15,7 +16,6 @@ const addPost = async (request, res) => {
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
         await userdata.save() 
-
         res.status(201).json({message:"Add Post Successfully"})
     }
     catch(err){
