@@ -95,17 +95,7 @@ const updateLikes=async(req,res)=>{
         const postData=await postModel.findById(postId) 
         //const userExist= await postModel.likeBy.findById(user_id);
          // Check if the user has already liked the post
-        const hasLiked = postData.likedBy.some(id => id.toString() === likes.toString());
-        if (hasLiked) {
-          // If already liked, remove the like
-          postData.likedBy = postData.likedBy.filter(id => id.toString() !== likes.toString());
-          postData.isLiked=false;
-        } else {
-          // If not liked, add the like
-          postData.likedBy.push(likes);
-          postData.isLiked=true;
-
-        }
+        postData.isLiked=likes
         await postData.save();
         res.status(200).json({message:"Post of Likes Updated Successfully"})
         

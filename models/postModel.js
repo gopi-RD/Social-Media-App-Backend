@@ -13,8 +13,7 @@ const postSchema=new mongoose.Schema({
         ref:"User",
         required:true
     },
-    likedBy:[ 
-    ],
+
     isLiked:{
         type:Boolean,
         default:false
