@@ -12,7 +12,7 @@ routes.post("/register", userController.userRegisteration);
 routes.post("/login", userController.userLogin);
 routes.get("/users",middleware,userController.getAllUsers);
 routes.get("/users/:userId",middleware,userController.getUser);
-routes.get("/users",middleware,userController.searchUsers)
+routes.get("/users/search",middleware,userController.searchUsers)
 
 // post Routes 
 

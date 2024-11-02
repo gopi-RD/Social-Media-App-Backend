@@ -97,6 +97,7 @@ const getUser=async(request,response)=>{
 
 const searchUsers=async(request,response)=>{
     const {searchText}=request.query 
+    console.log(searchText)
     try{
         let users
         if (searchText===""){
