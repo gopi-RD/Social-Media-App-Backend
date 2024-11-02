@@ -97,9 +97,10 @@ const getUser=async(request,response)=>{
 
 const searchUsers=async(request,response)=>{
     const {searchText}=request.query 
+    const query=searchText.toLowerCase()
     console.log(searchText)
     try{
-        const users=await userModel.find({$or:[{username:{$regex:searchText, $options:"i"}},{email:{$regex:searchText, $options:"i"}}]})
+        const users=await userModel.find({$or:[{username:{$regex:query, $options:"i"}},{email:{$regex:query, $options:"i"}}]})
        .populate("posts")
         response.send({users:users,status:200})
     }catch(error){
