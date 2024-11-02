@@ -5,15 +5,13 @@ const userModel=require("../models/userModel")
 
 const addPost = async (request, res) => {
     const {user_id}=request
-    console.log(user_id)
     try{
-        const userdata=await userModel.findById(user_id)
         const {content,imageUrl,likes}=request.body
         const newPost=new postModel({
             content:content,
             imageUrl:imageUrl,
             userId:user_id,
-            likes:likes 
+            likeBy:likes 
         })
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
@@ -76,8 +74,8 @@ const updatePost = async (req, res) => {
     try{
         const {user_id}=request
         const{postId}=req.params
-        const {content,imageUrl,likeBy}=req.body
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likeBy},{new:true})
+        const {content,imageUrl,likes}=req.body
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
@@ -93,14 +91,21 @@ const updatePost = async (req, res) => {
 const updateLikes=async(req,res)=>{
     const{postId}=req.params 
     const {user_id}=request
-    const {likeBy}=req.body
+    const {likes}=req.body
     try{
         const postData=await postModel.findById(postId) 
-        const {content,imageUrl}=postData
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likeBy},{new:true})
-        if(!post){
-            return res.status(404).json({err_msg:"Post Not Found"})
+        //const userExist= await postModel.likeBy.findById(user_id);
+         // Check if the user has already liked the post
+        const hasLiked = postData.likeBy.some(id => id.toString() === likes.toString());
+        if (hasLiked) {
+          // If already liked, remove the like
+          postData.likeBy = postData.likeBy.filter(id => id.toString() !== likes.toString());
+        } else {
+          // If not liked, add the like
+          postData.likeBy.push(likes);
+
         }
+        await postData.save();
         res.status(200).json({message:"Post of Likes Updated Successfully"})
         
     }
