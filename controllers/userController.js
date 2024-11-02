@@ -93,4 +93,17 @@ const getUser=async(request,response)=>{
     }
 }
 
-module.exports={userRegisteration,userLogin,getAllUsers,getUser};
+// search users by text 
+
+const searchUsers=async(request,response)=>{
+    const {searchText}=request.query 
+    try{
+        const users=await userModel.find({$or:[{username:{$regex:searchText, $options:"i"}},{email:{$regex:searchText, $options:"i"}}]})
+       .populate("posts")
+        response.send({users:users,status:200})
+    }catch(error){
+        response.send({error_msg:`Internal server Error is ${error}`,status:500})
+    }
+}
+
+module.exports={userRegisteration,userLogin,getAllUsers,getUser,searchUsers};
