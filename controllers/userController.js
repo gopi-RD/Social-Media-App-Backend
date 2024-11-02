@@ -71,7 +71,7 @@ const userLogin=async(request,response)=>{
     const getAllUsers=async(request,response)=>{
         console.log(request.user_id)
         try{
-            const users=await userModel.find().populate("posts")
+            const users=await userModel.find().populate('posts', 'content imageUrl')
             response.send({users:users,status:200})
         }catch(error){
             response.send({error_msg:`Internal server Error is ${error}`,status:500})
@@ -82,7 +82,7 @@ const getUser=async(request,response)=>{
     const {userId}=request.params 
     console.log(userId)
     try {
-        const user=await userModel.findById(userId).populate("posts")
+        const user=await userModel.findById(userId).populate('posts', 'content imageUrl')
         if (!user){
             response.send({err_msg:"User Not Found",status:400})
         }
@@ -96,12 +96,13 @@ const getUser=async(request,response)=>{
 // search users by text 
 
 const searchUsers=async(request,response)=>{
-    const {searchText}=request.query 
-    const query=searchText.toLowerCase()
-    console.log(searchText)
+    const {search}=request.query 
+    const query=search.toLowerCase()
+    console.log(search)
     try{
-        const users=await userModel.find({$or:[{username:{$regex:query, $options:"i"}},{email:{$regex:query, $options:"i"}}]})
-       .populate("posts")
+        const users = await userModel.find({
+            username: { $regex: query, $options: 'i' }, // Search for case-insensitive matches in username
+          }).select('username email')
         response.send({users:users,status:200})
     }catch(error){
         response.send({err_msg:error,status:500})
