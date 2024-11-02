@@ -70,10 +70,10 @@ const getAllPosts = async (req, res) => {
 // Update a post by id 
 
 
-const updatePost = async (req, res) => {
+const updatePost = async (request, res) => {
     try{
         const {user_id}=request
-        const{postId}=req.params
+        const{postId}=request.params
         const {content,imageUrl,likes}=req.body
         const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
         if(!post){
@@ -88,18 +88,31 @@ const updatePost = async (req, res) => {
 
 // Update Likes into the database
 
-const updateLikes=async(req,res)=>{
-    const{postId}=req.params 
-    const {likes}=req.body
+const updateLikes=async(request,res)=>{
+    const{postId}=request.params
+    const {user_id}=request
     try{
-        const postData=await postModel.findById(postId) 
-        //const userExist= await postModel.likeBy.findById(user_id);
-         // Check if the user has already liked the post
-        postData.isLiked=likes
-        await postData.save();
+        const post=await postModel.findById(postId)
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check if the user has already liked the post
+        const hasLiked = post.likes.some(id => id.toString() === user_id.toString());
+
+        if (hasLiked) {
+        // If already liked, remove the like
+        post.likes = post.likes.filter(id => id.toString() !== user_id.toString());
+        post.likesCount -= 1; // Decrement likesCount
+        } else {
+        // If not liked, add the like
+        post.likes.push(userId);
+        post.likesCount += 1; // Increment likesCount
+        }
+        await post.save();
         res.status(200).json({message:"Post of Likes Updated Successfully"})
-        
-    }
+            
+        }
     catch(err){
         res.status(500).json({err_msg:err.message})
     }

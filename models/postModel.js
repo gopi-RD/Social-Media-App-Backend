@@ -13,10 +13,16 @@ const postSchema=new mongoose.Schema({
         ref:"User",
         required:true
     },
-
-    isLiked:{
-        type:Boolean,
-        default:false
+    likes:[
+        {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+        // default: [] 
+        }
+    ],
+    likesCount:{
+        type:Number,
+        default:0
     },
     comments:[
         {
