@@ -99,7 +99,11 @@ const searchUsers=async(request,response)=>{
     const {searchText}=request.query 
     console.log(searchText)
     try{
-       const users=await userModel.find({$or:[{username:{$regex:searchText, $options:"i"}},{email:{$regex:searchText, $options:"i"}}]})
+        let users;
+        if (!searchText){
+            users=undefined;
+        }   
+        users=await userModel.find({$or:[{username:{$regex:searchText, $options:"i"}},{email:{$regex:searchText, $options:"i"}}]})
        .populate("posts")
         response.send({users:users,status:200})
     }catch(error){
