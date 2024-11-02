@@ -6,12 +6,11 @@ const userModel=require("../models/userModel")
 const addPost = async (request, res) => {
     const {user_id}=request
     try{
-        const {content,imageUrl,likes}=request.body
+        const {content,imageUrl}=request.body
         const newPost=new postModel({
             content:content,
             imageUrl:imageUrl,
             userId:user_id,
-            likeBy:likes 
         })
         const postsaved=await newPost.save() 
         userdata.posts.push(postsaved)
@@ -35,6 +34,8 @@ const getAllPosts = async (req, res) => {
               select: 'username'        // Select only the username field for the commenter
             }
           })
+        .populate("likes")
+
         res.status(200).json({posts})
     }
     catch(err){
@@ -56,6 +57,7 @@ const getAllPosts = async (req, res) => {
               select: 'username'        // Select only the username field for the commenter
             }
           })
+        .populate("likes") 
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
@@ -74,8 +76,8 @@ const updatePost = async (request, res) => {
     try{
         const {user_id}=request
         const{postId}=request.params
-        const {content,imageUrl,likes}=req.body
-        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id,likes},{new:true})
+        const {content,imageUrl}=req.body
+        const post=await postModel.findByIdAndUpdate(postId,{content,imageUrl,userId:user_id},{new:true})
         if(!post){
             return res.status(404).json({err_msg:"Post Not Found"})
         }
