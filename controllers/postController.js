@@ -93,6 +93,7 @@ const updatePost = async (request, res) => {
 const updateLikes=async(request,res)=>{
     const{postId}=request.params
     const {user_id}=request
+    console.log(user_id)
     try{
         const post=await postModel.findById(postId)
         if (!post) {
