@@ -12,6 +12,7 @@ routes.post("/register", userController.userRegisteration);
 routes.post("/login", userController.userLogin);
 routes.get("/users",middleware,userController.getAllUsers);
 routes.get("/users/:userId",middleware,userController.getUser);
+routes.get("/profile",middleware,userController.profileDetails);
 
 // post Routes 
 

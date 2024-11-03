@@ -95,18 +95,19 @@ const getUser=async(request,response)=>{
 
 // search users by text 
 
-const searchUsers=async(request,response)=>{
-    const {search}=request.query 
-    const query=search.toLowerCase()
-    console.log(search)
-    try{
-        const users = await userModel.find({
-            username: { $regex: query, $options: 'i' }, // Search for case-insensitive matches in username
-          }).select('username email')
-        response.send({users:users,status:200})
-    }catch(error){
-        response.send({err_msg:error,status:500})
+const profileDetails=async(request,response)=>{
+    const {user_id}=request
+    try {
+        const user=await userModel.findById(user_id).populate('posts', 'content imageUrl')
+        if (!user){
+            response.send({err_msg:"User Not Found",status:400})
+        }
+        
+        response.send(user).status(200)
+    } catch (error) {
+        response.send({err_msg:`Internal server Error is ${error}`,status:500})
     }
+    
 }
 
-module.exports={userRegisteration,userLogin,getAllUsers,getUser,searchUsers};
+module.exports={userRegisteration,userLogin,getAllUsers,getUser,profileDetails};
