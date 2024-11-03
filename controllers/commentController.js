@@ -4,11 +4,14 @@ const commentModel=require("../models/commentModel")
 
 // Add a comment 
 
-const addComment =async (req, res) => {
+const addComment =async (request, res) => {
+    const {user_id}=request
     try {
-        const {commentText}=req.body
+        const {commentText,postId}=req.body
         const newComment=new commentModel({
             commentText,
+            userId:user_id,
+            postId
         })
         await newComment.save()
         res.send({message:"Comment Added Successfully",status:200})
@@ -21,7 +24,7 @@ const addComment =async (req, res) => {
 
     const getAllComments =async (req, res) => {
     try {
-        const allComments=await commentModel.find().populate("post").exec()
+        const allComments=await commentModel.find().populate('userId', 'username email').populate('postId')
         res.send({message:allComments,status:200})
     } catch (error) {
         res.send({err_msg:`Comments Fetch Error: ${error}`,status:500})
