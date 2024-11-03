@@ -1,4 +1,6 @@
+
 const commentModel=require("../models/commentModel")
+const postModel=require("../models/postModel")
 
 
 
@@ -6,14 +8,17 @@ const commentModel=require("../models/commentModel")
 
 const addComment =async (request, res) => {
     const {user_id}=request
+    const {commentText,postId}=request.body
     try {
-        const {commentText,postId}=request.body
+        const post=await postModel.findById(postId)
         const newComment=new commentModel({
             commentText,
             userId:user_id,
             postId
         })
-        await newComment.save()
+        const savedComment= await newComment.save()
+        post.postId.push(savedComment)
+        await post.save()
         res.send({message:"Comment Added Successfully",status:200})
     } catch (error) {
         res.send({err_msg:`Comment Added Error: ${error}`,status:500})
