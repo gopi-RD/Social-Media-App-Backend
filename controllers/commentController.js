@@ -24,7 +24,12 @@ const addComment =async (request, res) => {
 
     const getAllComments =async (req, res) => {
     try {
-        const allComments=await commentModel.find().populate('userId', 'username email').populate('postId')
+        const allComments=await commentModel.find().populate({
+            path: 'postId',          // Populate commentId array
+            populate: {
+              path: 'comments',  
+            }
+          }).populate('userId', 'username email')
         res.send({message:allComments,status:200})
     } catch (error) {
         res.send({err_msg:`Comments Fetch Error: ${error}`,status:500})
