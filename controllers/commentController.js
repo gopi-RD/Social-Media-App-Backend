@@ -7,7 +7,7 @@ const commentModel=require("../models/commentModel")
 const addComment =async (request, res) => {
     const {user_id}=request
     try {
-        const {commentText,postId}=req.body
+        const {commentText,postId}=request.body
         const newComment=new commentModel({
             commentText,
             userId:user_id,
