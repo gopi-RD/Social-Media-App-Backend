@@ -14,7 +14,6 @@ const addComment =async (request, res) => {
         const newComment=new commentModel({
             commentText,
             userId:user_id,
-            postId
         })
         const savedComment= await newComment.save()
         post.postId.push(savedComment)
