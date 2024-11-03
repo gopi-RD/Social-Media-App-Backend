@@ -9,12 +9,11 @@ const commentSchema=new mongoose.Schema({
         ref:"User",
         
     },
-    postId:[
+    postId:
         {
         type:mongoose.Schema.Types.ObjectId,
         ref:"Post",
        }
-]
 },
 {
     timestamps:true
