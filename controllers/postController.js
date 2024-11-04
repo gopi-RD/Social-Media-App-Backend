@@ -95,26 +95,22 @@ const updateLikes=async(request,res)=>{
     const {user_id}=request
     console.log(user_id)
     try{
-        const post=await postModel.findById(postId)
-        if (!post) {
-        return res.status(404).json({ message: 'Post not found' });
-        }
-
-        // Check if the user has already liked the post
-        const hasLiked = post.likes.some(id => id.toString() === user_id.toString());
-
-        if (hasLiked) {
-        // If already liked, remove the like
-        post.likes = post.likes.filter(id => id.toString() !== user_id.toString());
-        post.likesCount -= 1; // Decrement likesCount
-        } else {
-        // If not liked, add the like
-        post.likes.push(user_id);
-        post.likesCount += 1; // Increment likesCount
-        }
-        await post.save();
-        res.status(200).json({message:"Post of Likes Updated Successfully"})
-            
+       const post= await postModel.findById(postId)
+       if (post.likes.includes(user_id)===false){
+         await postModel.findByIdAndUpdate(postId,{
+            $push: {likes: user_id}
+        },
+        {new:true}
+        )
+    }
+    else{
+        await postModel.findByIdAndUpdate(postId,{
+            $pull: {likes: user_id}
+        },
+        {new:true}
+    )
+    } 
+    res.status(200).json({message:"Post of Likes Updated Successfully"})
         }
     catch(err){
         res.status(500).json({err_msg:err.message})
